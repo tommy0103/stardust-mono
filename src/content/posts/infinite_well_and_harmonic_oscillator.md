@@ -20,14 +20,18 @@ $$\psi = 0$$
 ### 1. 方程求解
 
 将势阱内的方程改写为标准形式：
+
 $$\psi'' + \frac{2mE}{\hbar^2}\psi = 0$$
 令 $k^2 = \frac{2mE}{\hbar^2} > 0$，特征方程的根为 $r = \pm ik$。
+
 因此，波函数的通解可以写为：
+
 $$\psi(x) = A \cos kx + B \sin kx$$
 
 ### 2. 边界条件与能级
 
 代入边界条件 $\psi(a) = \psi(-a) = 0$，得到方程组：
+
 $$
 \begin{cases}
 A \cos ka = 0 \\
@@ -36,15 +40,18 @@ B \sin ka = 0
 $$
 
 由此可以推导出体系的能量本征值（能级）：
+
 $$E_n = \frac{n^2\pi^2\hbar^2}{2m(2a)^2} = \frac{n^2\pi^2\hbar^2}{8ma^2}$$
 
 对应的波函数具有奇偶宇称性：
+
 $$
 \psi(x) = \begin{cases}
 A \cos \frac{n\pi}{2a}x, & n \text{ 为奇数} \\
 B \sin \frac{n\pi}{2a}x, & n \text{ 为偶数}
 \end{cases}
 $$
+
 或者统一平移表达为：$\psi(x) = A' \sin \left[ \frac{n\pi}{2a}(x+a) \right]$。
 
 ---

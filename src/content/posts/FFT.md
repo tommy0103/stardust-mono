@@ -22,6 +22,7 @@ $$f(x) = a_0 + \sum_{k=1}^{\infty} \left( a_k \cos \frac{k\pi x}{l} + b_k \sin \
 其中，各个系数的计算公式如下：
 
 $$a_k = \frac{1}{\delta_k l} \int_{-l}^{l} f(\xi) \cos \frac{k\pi \xi}{l} d\xi$$
+
 $$b_k = \frac{1}{l} \int_{-l}^{l} f(\xi) \sin \frac{k\pi \xi}{l} d\xi$$
 
 这里引入了 $\delta_k$ 来统一直流分量 $a_0$ 与交流分量 $a_k$ 的表达式：
@@ -42,7 +43,9 @@ $$c_k = \frac{1}{2l} \int_{-l}^{l} f(\xi) e^{-i \frac{k\pi \xi}{l}} d\xi$$
 $$\Rightarrow \frac{a_k - i b_k}{2} e^{i\theta} + \frac{a_k + i b_k}{2} e^{-i\theta}$$
 
 对比复数形式 $c_k e^{i\theta} + c_{-k} e^{-i\theta}$，可得系数关系：
+
 $$c_k = \frac{a_k - i b_k}{2}$$
+
 $$c_{-k} = \frac{a_k + i b_k}{2}$$
 
 ---
@@ -113,9 +116,9 @@ $$\delta(x) \leftrightarrow F(\omega) = \frac{1}{2\pi}$$
    时域的卷积等于频域的乘积（注意常数系数）：
 
    $$f_1(x) * f_2(x) \leftrightarrow 2\pi F_1(\omega) F_2(\omega)$$
-   
+
    其中卷积定义为：
-   
+
    $$f_1(x) * f_2(x) = \int_{-\infty}^{\infty} f_1(\xi) f_2(x-\xi) d\xi$$
 
 ---
@@ -144,6 +147,6 @@ $$\Rightarrow f(x) = \int_{-\infty}^{\infty} \left( \frac{1}{2\pi} \int_{-\infty
 
 $$f(x) = \int_{-\infty}^{\infty} F(\omega) e^{i\omega x} d\omega$$
 
-$$F(\omega) = \frac{1}{2\pi} \int_{-\infty}^{\infty} f(x) e^{-i\omega x} dx$$ 
+$$F(\omega) = \frac{1}{2\pi} \int_{-\infty}^{\infty} f(x) e^{-i\omega x} dx$$
 
 *(注：这里将积分里的积分变量 $\xi$ 换回了更常见的 $x$)*
