@@ -1,0 +1,72 @@
+---
+import Layout from '../core/layouts/Layout.astro';
+import PostCard from '../core/components/PostCard.astro';
+import { getCollection } from 'astro:content';
+
+const allPosts = await getCollection('posts');
+const sortedPosts = allPosts.sort(
+  (a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime(),
+);
+---
+
+<Layout
+  title="Mio's Notes — 数字花园"
+  description="亮色液态玻璃风格的笔记归档：Markdown 与 LaTeX 可读排版。"
+>
+  <main id="main" class="relative">
+    <section class="mx-auto max-w-3xl px-5 pb-6 pt-12 md:px-6 md:pb-10 md:pt-16">
+      <div class="glass-panel-strong px-6 py-12 md:px-10 md:py-16">
+        <p
+          class="mb-4 font-mono text-xs uppercase tracking-[0.22em] text-[var(--apoc-faint)]"
+        >
+          Digital garden
+        </p>
+        <h1
+          class="font-serif text-4xl font-bold leading-[1.12] tracking-tight text-[var(--apoc-ink)] md:text-5xl"
+        >
+          深夜笔记与公式归档
+        </h1>
+        <p
+          class="mt-6 max-w-2xl text-lg leading-relaxed text-[var(--apoc-muted)] md:text-xl"
+        >
+          本不该交会的主题在此折射、归档……亮色液态玻璃界面下，长文与公式仍然优先可读。
+        </p>
+        <div class="mt-10 flex flex-wrap items-center gap-4">
+          <a href="#posts" class="btn-glass-primary">开始阅读</a>
+          {sortedPosts[0] && (
+            <a
+              href={`/posts/${sortedPosts[0].id}`}
+              class="btn-glass text-[var(--apoc-muted)] hover:text-[var(--apoc-ink)]"
+            >
+              最新：{sortedPosts[0].data.title}
+            </a>
+          )}
+        </div>
+      </div>
+    </section>
+
+    <section id="posts" class="mx-auto max-w-3xl scroll-mt-28 px-5 py-10 md:px-6 md:py-16">
+      <div
+        class="mb-10 flex items-end justify-between gap-4 rounded-2xl border border-[var(--glass-border-soft)] bg-[var(--glass-fill)] px-5 py-4 backdrop-blur-md md:px-6"
+      >
+        <div>
+          <h2 class="font-serif text-2xl font-bold text-[var(--apoc-ink)]">笔记归档</h2>
+          <p class="mt-1 text-sm text-[var(--apoc-muted)]">按发布时间倒序</p>
+        </div>
+        <span class="font-mono text-xs text-[var(--apoc-faint)]">{sortedPosts.length} 篇</span>
+      </div>
+
+      <div class="flex flex-col gap-7">
+        {sortedPosts.map((post) => (
+          <PostCard post={post} />
+        ))}
+      </div>
+
+      <footer
+        class="mt-16 rounded-2xl border border-[var(--glass-border-soft)] bg-[var(--glass-fill)] px-4 py-8 text-center text-sm text-[var(--apoc-muted)] backdrop-blur-md"
+      >
+        <p>Astro + Tailwind Typography + MathJax</p>
+      </footer>
+    </section>
+  </main>
+</Layout>

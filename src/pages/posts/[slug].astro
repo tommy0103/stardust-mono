@@ -1,0 +1,80 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '../../core/layouts/Layout.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts');
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+const formattedDate = post.data.publishedAt.toLocaleString('zh-CN', {
+  timeZone: 'Asia/Shanghai',
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+  hour: '2-digit',
+  minute: '2-digit',
+});
+
+const desc = post.data.description ?? '';
+---
+
+<Layout title={`${post.data.title} — Mio's Notes`} description={desc}>
+  <main id="main" class="mx-auto max-w-3xl px-5 py-10 md:px-6 md:py-14">
+    <nav
+      class="mb-8 rounded-xl border border-[var(--glass-border-soft)] bg-[var(--glass-fill)] px-4 py-3 text-sm text-[var(--apoc-muted)] backdrop-blur-md"
+    >
+      <a href="/" class="hover:text-[var(--apoc-accent)]">首页</a>
+      <span class="mx-2 text-[var(--apoc-faint)]">/</span>
+      <a href="/#posts" class="hover:text-[var(--apoc-accent)]">归档</a>
+      <span class="mx-2 text-[var(--apoc-faint)]">/</span>
+      <span class="text-[var(--apoc-ink)]">正文</span>
+    </nav>
+
+    <div class="glass-panel-strong px-6 py-10 md:px-10 md:py-12">
+      <header class="mb-10 border-b border-[var(--glass-border-soft)] pb-10">
+        <p class="mb-3 font-mono text-xs uppercase tracking-[0.2em] text-[var(--apoc-faint)]">
+          {formattedDate}
+        </p>
+        <h1
+          class="font-serif text-3xl font-bold leading-tight tracking-tight text-[var(--apoc-ink)] md:text-4xl"
+        >
+          {post.data.title}
+        </h1>
+        {desc && <p class="mt-5 text-lg leading-relaxed text-[var(--apoc-muted)]">{desc}</p>}
+        {post.data.tags && post.data.tags.length > 0 && (
+          <div class="mt-6 flex flex-wrap gap-2">
+            {post.data.tags.map((tag) => (
+              <span
+                class="rounded-full border border-[var(--glass-border-soft)] bg-[var(--apoc-accent-soft)] px-2.5 py-0.5 font-mono text-[0.65rem] uppercase tracking-wide text-[var(--apoc-muted)]"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
+      </header>
+
+      <article
+        class="prose prose-lg prose-apocrypha max-w-none text-[var(--apoc-ink)] prose-headings:font-serif"
+      >
+        <Content />
+      </article>
+    </div>
+
+    <footer class="mt-10 text-center text-sm text-[var(--apoc-muted)]">
+      <a
+        href="/#posts"
+        class="btn-glass font-medium text-[var(--apoc-ink)] no-underline hover:text-[var(--apoc-accent)]"
+      >
+        ← 返回归档
+      </a>
+    </footer>
+  </main>
+</Layout>

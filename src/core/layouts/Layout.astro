@@ -1,0 +1,47 @@
+---
+import '../../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = "Stardust Mono — 数字花园",
+  description = '亮色液态玻璃风格笔记站：Markdown 与 LaTeX 排版。',
+} = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600&family=Noto+Serif+SC:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="min-h-screen antialiased">
+    <a href="#main" class="skip-link">跳到正文</a>
+    <header class="glass-nav sticky top-0 z-40">
+      <div class="mx-auto flex max-w-3xl items-center justify-between gap-4 px-5 py-3 md:px-6">
+        <a
+          href="/"
+          class="font-serif text-lg font-semibold tracking-tight text-[var(--apoc-ink)] decoration-[var(--apoc-accent)] underline-offset-4 hover:underline"
+        >
+          Mio's Notes
+        </a>
+        <nav class="flex items-center gap-5 text-sm text-[var(--apoc-muted)]">
+          <a href="/#posts" class="hover:text-[var(--apoc-accent)]">归档</a>
+          <a href="/" class="hover:text-[var(--apoc-accent)]">首页</a>
+        </nav>
+      </div>
+    </header>
+    <slot />
+  </body>
+</html>

@@ -1,0 +1,53 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  post: CollectionEntry<'posts'>;
+}
+
+const { post } = Astro.props;
+const formattedDate = post.data.publishedAt.toLocaleDateString('zh-CN', {
+  timeZone: 'Asia/Shanghai',
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+const href = `/posts/${post.id}`;
+---
+
+<article
+  class="glass-panel group p-6 transition-[transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:shadow-[0_16px_48px_rgba(72,95,150,0.12)] md:p-7"
+>
+  <a href={href} class="block no-underline">
+    <header class="mb-3">
+      <p class="mb-1 font-mono text-xs uppercase tracking-widest text-[var(--apoc-faint)]">
+        {formattedDate}
+      </p>
+      <h2
+        class="font-serif text-xl font-semibold leading-snug text-[var(--apoc-ink)] decoration-[var(--apoc-accent)] underline-offset-4 group-hover:underline md:text-2xl"
+      >
+        {post.data.title}
+      </h2>
+    </header>
+    {post.data.description && (
+      <p class="mb-4 text-[0.95rem] leading-relaxed text-[var(--apoc-muted)]">{post.data.description}</p>
+    )}
+    <span class="inline-flex items-center gap-1 text-sm font-semibold text-[var(--apoc-accent)]">
+      阅读全文
+      <span aria-hidden="true">→</span>
+    </span>
+  </a>
+  {post.data.tags && post.data.tags.length > 0 && (
+    <footer
+      class="mt-5 flex flex-wrap gap-2 border-t border-[var(--glass-border-soft)] pt-4"
+    >
+      {post.data.tags.map((tag) => (
+        <span
+          class="rounded-full border border-[var(--glass-border-soft)] bg-[var(--apoc-accent-soft)] px-2.5 py-0.5 font-mono text-[0.65rem] uppercase tracking-wide text-[var(--apoc-muted)]"
+        >
+          {tag}
+        </span>
+      ))}
+    </footer>
+  )}
+</article>
