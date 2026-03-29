@@ -30,7 +30,11 @@ description: 本文探讨了从一个 png2text 方案引发的思考：当大模
 
 > 你可以帮我识别一下这个笔迹，并且按照内容的意图重新排版成可以发表成 blog 的 markdown 文档吗？
 
-测试内容分别是 [傅里叶变换](https://stardust-mono.vercel.app/posts/fft) 和 [量子力学中的一维谐振子](https://stardust-mono.vercel.app/posts/infinite_well_and_harmonic_oscillator)，可以看到效果是不错的，并且它的识别准确率居然达到了 99.9%。
+![gemini_chat](../assets/png2text/gemini.jpg)
+
+![handwriting](../assets/png2text/handwriting.jpg)
+
+测试内容分别是 [傅里叶变换](https://stardust-mono.vercel.app/posts/math_and_physics/fft) 和 [量子力学中的一维谐振子](https://stardust-mono.vercel.app/posts/math_and_physics/infinite_well_and_harmonic_oscillator)，可以看到效果是不错的，并且它的识别准确率居然达到了 99.9%。
 
 这让我意识到，或许之前我们走入了一些思维定势，于是对这个问题有了一些思考，并写了这篇文章。
 
