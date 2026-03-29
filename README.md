@@ -9,7 +9,7 @@
 
 天下苦重型 CMS 久矣。我们需要一个能够随时随地记录状态、承载知识的个人空间，但这并不意味着我们要为此去租用一台昂贵的云服务器，或者每天操心 Node.js 进程有没有崩溃。
 
-Mio Space 采用彻底的 **Serverless（无服务器）** 与 **动静分离** 架构：
+Stardust Mono 采用彻底的 **Serverless（无服务器）** 与 **动静分离** 架构：
 
 - **📝 文章归于 Git，享受静态极速：** 长篇的硬核物理公式、技术推导，是需要沉淀的结构化知识。它们交由 Git 管理，在本地使用 Markdown 编写，借助 Astro 在构建时直接将 MathJax 渲染为静态 SVG。
 - **⚡️ 状态归于 API，拥抱动态数据：** 日常的碎片吐槽、自动化脚本推送的打卡记录、Agent 感知到的你的心情状态，这些 `Data Stream` 不需要死板的 Git 工作流。通过极简的 Core API，瞬间写入边缘数据库。
@@ -38,7 +38,7 @@ Mio Space 采用彻底的 **Serverless（无服务器）** 与 **动静分离** 
 ### 2. 初始化
 
 ```bash
-npm create mio-space@latest my-garden
+npm create stardust-mono@latest my-garden
 cd my-garden
 npm install
 ```
@@ -65,7 +65,7 @@ npm run dev
 
 ## 📖 目录结构说明
 
-Mio Space 严格遵循“框架与数据隔离”的原则：
+Stardust Mono 严格遵循“框架与数据隔离”的原则：
 
 - `src/content/`: 你的专属数据区。所有的长篇 Markdown 笔记请放在这里。
 - `src/api/`: 核心 API 引擎，处理所有流动的状态数据。
