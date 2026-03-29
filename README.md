@@ -1,43 +1,32 @@
-# Astro Starter Kit: Minimal
+# Stardust Mono
 
-```sh
-npm create astro@latest -- --template minimal
-```
+> 一个专为极客与创作者打造的 API-First Headless Digital Garden。
+> 抛弃沉重的服务器，告别内存焦虑，回归书写与自动化的纯粹。
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## 从传统 CMS 的痛点引发的思考：我们需要怎样的数字分身？
 
-## 🚀 Project Structure
+天下苦重型 CMS 久矣。我们需要一个能够随时随地记录状态、承载知识的个人空间，但这并不意味着我们要为此去租用一台昂贵的云服务器，或者每天操心 Node.js 进程有没有崩溃、数据库有没有吃满内存。
 
-Inside of your Astro project, you'll see the following folders and files:
+最初构思这个框架时，我意识到传统博客往往陷入了一个思维定势：试图用一个大包大揽的单体应用解决所有问题。但对于开发者而言，长篇的技术推导和随手的碎片化吐槽，本质上是两种完全不同的数据流。把它们强行塞进同一个重型管线里，必然会使得整个系统变得臃肿且难以维护。
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
+因此，Mio Space 采用了一种彻底的 Serverless 与动静分离架构。
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## The Insight：文章归于 Git，状态归于 API
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+这就引出了架构设计的核心决策：物理隔离。
 
-Any static assets, like images, can be placed in the `public/` directory.
+对于长篇大论、带有硬核物理公式的技术笔记，它们是需要沉淀的结构化知识。把它们放进数据库其实是不优雅的。在这套架构中，这部分内容完全交由 `Git` 管理。在本地使用纯 `Markdown/MDX` 编写，依靠 `Astro` 在构建时直接将 `MathJax` 渲染为静态的 SVG。这既保证了极速加载，又兼顾了对复杂排版的要求。
 
-## 🧞 Commands
+而日常的碎片化想法、心情状态，甚至是自动化脚本推送的 maimai rating，这些属于 `Data Stream`。它们不需要死板的 `Git` 工作流。通过 `Hono` 提供的轻量级 API，这些状态可以直接、瞬间地写入边缘数据库。
 
-All commands are run from the root of the project, from a terminal:
+## 真正的 Zero-Ops：让渡运维的控制权
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+从忍受繁琐的服务器配置，到享受纯粹的 Serverless 部署，这中间其实跨越了一道工程认知的鸿沟。真正的 Zero-Ops 不该是提供更复杂的运维脚本，而是从架构底层消解掉运维的需求。
 
-## 👀 Want to learn more?
+不需要购买云服务器，不需要配置 Docker。
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+* **展现层：** 交给 Vercel 或 Cloudflare Pages 进行边缘分发，全球 CDN 极速响应。
+* **核心引擎：** 基于 Hono 打造的 API 路由，完美寄生于 Serverless 函数中。平日静默如海，仅在被调用时毫秒级冷启动。
+* **数据持久化：** 接入基于 libSQL 的 Turso 边缘数据库。数据分布式存储，免去一切常规数据库的维护烦恼。
+
+当我们在构思个人数字空间时，这或许提供了一个绝佳的视角：不该再用僵化的系统去捆绑自己，而是把底层的复杂性丢给无服务器架构去处理。人退居二线，只负责最核心的书写与逻辑构建，还自己一个干净、纯粹的表达空间。
