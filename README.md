@@ -1,32 +1,72 @@
-# Stardust Mono
+# 🌌 Stardust Mono
 
-> 一个专为极客与创作者打造的 API-First Headless Digital Garden。
+[](https://vercel.com/new)
+
+> 一个专为极客与创作者打造的 API-First 无头数字花园。
 > 抛弃沉重的服务器，告别内存焦虑，回归书写与自动化的纯粹。
 
-## 从传统 CMS 的痛点引发的思考：我们需要怎样的数字分身？
+## 💡 核心哲学：Why Stardust Mono?
 
-天下苦重型 CMS 久矣。我们需要一个能够随时随地记录状态、承载知识的个人空间，但这并不意味着我们要为此去租用一台昂贵的云服务器，或者每天操心 Node.js 进程有没有崩溃、数据库有没有吃满内存。
+天下苦重型 CMS 久矣。我们需要一个能够随时随地记录状态、承载知识的个人空间，但这并不意味着我们要为此去租用一台昂贵的云服务器，或者每天操心 Node.js 进程有没有崩溃。
 
-最初构思这个框架时，我意识到传统博客往往陷入了一个思维定势：试图用一个大包大揽的单体应用解决所有问题。但对于开发者而言，长篇的技术推导和随手的碎片化吐槽，本质上是两种完全不同的数据流。把它们强行塞进同一个重型管线里，必然会使得整个系统变得臃肿且难以维护。
+Mio Space 采用彻底的 **Serverless（无服务器）** 与 **动静分离** 架构：
 
-因此，Mio Space 采用了一种彻底的 Serverless 与动静分离架构。
+- **📝 文章归于 Git，享受静态极速：** 长篇的硬核物理公式、技术推导，是需要沉淀的结构化知识。它们交由 Git 管理，在本地使用 Markdown 编写，借助 Astro 在构建时直接将 MathJax 渲染为静态 SVG。
+- **⚡️ 状态归于 API，拥抱动态数据：** 日常的碎片吐槽、自动化脚本推送的打卡记录、Agent 感知到的你的心情状态，这些 `Data Stream` 不需要死板的 Git 工作流。通过极简的 Core API，瞬间写入边缘数据库。
 
-## The Insight：文章归于 Git，状态归于 API
+真正的 Zero-Ops 不该是提供更复杂的运维脚本，而是从架构底层消解掉运维的需求。
 
-这就引出了架构设计的核心决策：物理隔离。
+## ✨ 核心特性
 
-对于长篇大论、带有硬核物理公式的技术笔记，它们是需要沉淀的结构化知识。把它们放进数据库其实是不优雅的。在这套架构中，这部分内容完全交由 `Git` 管理。在本地使用纯 `Markdown/MDX` 编写，依靠 `Astro` 在构建时直接将 `MathJax` 渲染为静态的 SVG。这既保证了极速加载，又兼顾了对复杂排版的要求。
+- **☁️ 真正的 Zero-Ops：** 零服务器成本，零内存泄漏焦虑。前端边缘 CDN 分发，后端 Serverless 函数冷启动，数据库全球边缘同步。
+- **📐 学术级排版引擎：** 内置 `rehype-mathjax` 与 `Tailwind Typography`，完美渲染复杂数学公式与多行推导，无需客户端加载冗余字体库。
+- **🔌 API-First 架构：** 后端不仅仅是为了服务博客前端，更是一个标准的 RESTful 接口。你可以轻松接入你的 Telegram Bot、快捷指令，甚至是你自己编写的 AI Agent 运行时。
+- **🧩 高度解耦：** 铁打的后端引擎，流水的展现层。你可以随时抛弃自带的 Astro 模板，用任何你喜欢的框架重新接入数据。
 
-而日常的碎片化想法、心情状态，甚至是自动化脚本推送的 maimai rating，这些属于 `Data Stream`。它们不需要死板的 `Git` 工作流。通过 `Hono` 提供的轻量级 API，这些状态可以直接、瞬间地写入边缘数据库。
+## 🛠 技术栈
 
-## 真正的 Zero-Ops：让渡运维的控制权
+- **前端页面 (Frontend):** [Astro](https://astro.build/) + Tailwind CSS
+- **核心 API (Core API):** [Hono](https://hono.dev/) (运行于 Vercel Edge Functions)
+- **边缘数据 (Database):** [Turso](https://turso.tech/) (基于 libSQL) + Drizzle ORM
 
-从忍受繁琐的服务器配置，到享受纯粹的 Serverless 部署，这中间其实跨越了一道工程认知的鸿沟。真正的 Zero-Ops 不该是提供更复杂的运维脚本，而是从架构底层消解掉运维的需求。
+## 🚀 快速开始（目前尚未完成）
 
-不需要购买云服务器，不需要配置 Docker。
+### 1. 准备工作
 
-* **展现层：** 交给 Vercel 或 Cloudflare Pages 进行边缘分发，全球 CDN 极速响应。
-* **核心引擎：** 基于 Hono 打造的 API 路由，完美寄生于 Serverless 函数中。平日静默如海，仅在被调用时毫秒级冷启动。
-* **数据持久化：** 接入基于 libSQL 的 Turso 边缘数据库。数据分布式存储，免去一切常规数据库的维护烦恼。
+确保你拥有 [GitHub](https://github.com/)、[Vercel](https://vercel.com/) 和 [Turso](https://turso.tech/) 的免费账号。
 
-当我们在构思个人数字空间时，这或许提供了一个绝佳的视角：不该再用僵化的系统去捆绑自己，而是把底层的复杂性丢给无服务器架构去处理。人退居二线，只负责最核心的书写与逻辑构建，还自己一个干净、纯粹的表达空间。
+### 2. 初始化
+
+```bash
+npm create mio-space@latest my-garden
+cd my-garden
+npm install
+```
+
+### 3. 配置环境变量
+
+复制 `.env.example` 为 `.env`，并填入你的 Turso 数据库密钥与自定义的 API Token：
+
+```env
+TURSO_DATABASE_URL="libsql://your-db-name.turso.io"
+TURSO_AUTH_TOKEN="your-turso-token"
+AGENT_SECRET_KEY="your-super-secret-key"
+```
+
+### 4. 本地运行与部署
+
+```bash
+npm run dev
+```
+
+开发完成后，一键推送到 GitHub，Vercel 将自动接管一切构建与部署流程。
+
+-----
+
+## 📖 目录结构说明
+
+Mio Space 严格遵循“框架与数据隔离”的原则：
+
+- `src/content/`: 你的专属数据区。所有的长篇 Markdown 笔记请放在这里。
+- `src/api/`: 核心 API 引擎，处理所有流动的状态数据。
+- `src/core/`: 框架的 UI 组件与布局逻辑。
