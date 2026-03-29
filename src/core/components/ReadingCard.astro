@@ -1,0 +1,94 @@
+---
+import type { ReadingItem } from '../../data/readings';
+
+interface Props {
+  item: ReadingItem;
+  statusLabel: string;
+  statusColor: string;
+}
+
+const { item, statusLabel, statusColor } = Astro.props;
+
+function formatDate(date: Date): string {
+  return date.toLocaleDateString('zh-CN', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  });
+}
+
+function getReadingPeriod(item: ReadingItem): string | null {
+  if (item.status === 'finished' && item.startedAt && item.finishedAt) {
+    return `${formatDate(item.startedAt)} - ${formatDate(item.finishedAt)}`;
+  }
+  if (item.status === 'reading' && item.startedAt) {
+    return `${formatDate(item.startedAt)} - 进行中`;
+  }
+  return null;
+}
+---
+
+<article class="reading-card group">
+  <div class="flex items-start justify-between gap-4">
+    <div class="flex-1 min-w-0">
+      <a
+        href={item.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="block font-medium text-[var(--apoc-ink)] hover:text-[var(--apoc-accent)] transition-colors line-clamp-2"
+      >
+        {item.title}
+        <span class="ml-1.5 inline-block text-[var(--apoc-faint)] opacity-0 group-hover:opacity-100 transition-opacity">↗</span>
+      </a>
+      <div class="mt-2 flex flex-wrap items-center gap-2 text-xs text-[var(--apoc-muted)]">
+        <span class="rounded bg-[var(--glass-fill)] px-2 py-0.5 border border-[var(--glass-border-soft)]">{item.source}</span>
+        <span>·</span>
+        <time datetime={item.addedAt.toISOString()}>添加于 {formatDate(item.addedAt)}</time>
+      </div>
+      {getReadingPeriod(item) && (
+        <div class="mt-2 flex items-center gap-1.5 text-xs">
+          <svg class="w-3.5 h-3.5 text-[var(--apoc-accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span class="text-[var(--apoc-accent)] font-medium">阅读区间：</span>
+          <span class="text-[var(--apoc-muted)]">{getReadingPeriod(item)}</span>
+        </div>
+      )}
+    </div>
+    <span class={`shrink-0 rounded-full border px-2.5 py-0.5 text-xs font-medium ${statusColor}`}>
+      {statusLabel}
+    </span>
+  </div>
+  {item.comment && (
+    <p class="mt-3 text-sm text-[var(--apoc-muted)] leading-relaxed">
+      <span class="text-[var(--apoc-accent)]">💬</span> {item.comment}
+    </p>
+  )}
+  {item.tags.length > 0 && (
+    <div class="mt-3 flex flex-wrap gap-1.5">
+      {item.tags.map((tag) => (
+        <span class="rounded-md bg-[var(--apoc-accent-soft)] px-2 py-0.5 text-xs text-[var(--apoc-accent)]">
+          #{tag}
+        </span>
+      ))}
+    </div>
+  )}
+</article>
+
+<style>
+  .reading-card {
+    background: var(--glass-fill);
+    backdrop-filter: blur(18px) saturate(160%);
+    -webkit-backdrop-filter: blur(18px) saturate(160%);
+    border: 1px solid var(--glass-border-soft);
+    border-radius: 1rem;
+    padding: 1.25rem;
+    box-shadow: 0 4px 16px rgba(72, 95, 150, 0.06);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .reading-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(72, 95, 150, 0.1);
+  }
+</style>
