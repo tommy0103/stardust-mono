@@ -28,7 +28,7 @@ export const mockReadings: ReadingItem[] = [
     },
     {
         id: '2026-03-002',
-        title: 'The Architecture of Open Source Applications',
+        title: '图解分布式系统原理',
         url: 'https://www.codedump.info/dist-system-cn/',
         source: '专栏文章',
         comment: '感觉分布式系统是黑魔法',
@@ -49,7 +49,7 @@ export const mockReadings: ReadingItem[] = [
     },
     {
         id: '2026-03-004',
-        title: 'The Architecture of Open Source Applications',
+        title: 'memU 拆解：当 Agent 的记忆不再是循环里的一行代码',
         url: 'https://mp.weixin.qq.com/s/vxeEmgAqwiR4F0whE5kwxg',
         source: '微信公众号',
         comment: 'memU 的做法也许值得借鉴',
