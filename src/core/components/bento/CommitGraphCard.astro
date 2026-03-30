@@ -61,7 +61,7 @@ const isMock = !data;
   </p>
 
   <!-- Graph -->
-  <div class="overflow-x-auto">
+  <div class="graph-scroll">
     <div class="flex gap-0.5 min-w-max">
       <div class="flex flex-col justify-between py-0.5 pr-1.5 text-[9px] text-[var(--apoc-faint)]">
         {dayLabels.map((label) => (
@@ -98,6 +98,19 @@ const isMock = !data;
 </article>
 
 <style>
+  .graph-scroll {
+    overflow-x: auto;
+    overflow-y: hidden;
+    /* 触控设备只允许横向滑动 */
+    touch-action: pan-x;
+    /* 隐藏滚动条但保留功能 */
+    scrollbar-width: none;
+  }
+
+  .graph-scroll::-webkit-scrollbar {
+    display: none;
+  }
+
   .commit-cell {
     width: 11px;
     height: 11px;
@@ -135,3 +148,15 @@ const isMock = !data;
     border: 1px solid var(--apoc-accent);
   }
 </style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.graph-scroll').forEach((el) => {
+    el.addEventListener('wheel', (e: WheelEvent) => {
+      // 如果有明显横向分量就让浏览器自然处理
+      if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+      // 否则把纵向滚轮映射为横向滚动，阻止页面上下滚动
+      e.preventDefault();
+      el.scrollLeft += e.deltaY;
+    }, { passive: false });
+  });
+</script>
