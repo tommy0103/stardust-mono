@@ -1,7 +1,7 @@
 ---
 # src/content/posts/tech_log/mcp & cli.md
 title: 打破拟人化迷思：从 MCP 与 CLI 之争，看 Agent 的系统重构
-publishedAt: 2026-03-29T13:50:00+08:00 # 发布时间 (ISO 8601格式，含时区)
+publishedAt: 2026-03-30T13:50:00+08:00 # 发布时间 (ISO 8601格式，含时区)
 tags: ['agent', 'architecture']
 description: 本文探讨了 Agent 工程中 MCP 与 CLI 之争，以及其背后的认知本质。
 ---

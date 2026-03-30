@@ -35,24 +35,12 @@ const sortedPosts = allPosts.sort(
 
 <Layout title={`${post.data.title} — Mio's Notes`} description={desc}>
   <main id="main" class="mx-auto max-w-6xl px-5 py-10 md:px-6 md:py-14">
-    <!-- 面包屑导航 -->
-    <nav
-      data-cascade="0"
-      class="mb-8 rounded-xl border border-[var(--glass-border-soft)] bg-[var(--glass-fill)] px-4 py-3 text-sm text-[var(--apoc-muted)] backdrop-blur-md"
-    >
-      <a href="/" class="hover:text-[var(--apoc-accent)]">首页</a>
-      <span class="mx-2 text-[var(--apoc-faint)]">/</span>
-      <a href="/posts" class="hover:text-[var(--apoc-accent)]">归档</a>
-      <span class="mx-2 text-[var(--apoc-faint)]">/</span>
-      <span class="text-[var(--apoc-ink)]">正文</span>
-    </nav>
-
     <!-- 双栏布局 -->
     <div class="post-layout">
-      <!-- 主内容区 -->
+      <!-- 主内容区 - 无界画卷 -->
       <div class="post-main">
-        <div data-cascade="1" class="glass-panel-strong px-6 py-10 md:px-10 md:py-12">
-          <header class="mb-10 border-b border-[var(--glass-border-soft)] pb-10">
+        <div data-cascade="1" class="py-10 md:py-12">
+          <header class="mb-10 pb-10">
             <p class="mb-3 font-mono text-xs uppercase tracking-[0.2em] text-[var(--apoc-faint)]">
               {formattedDate}
             </p>
@@ -94,11 +82,9 @@ const sortedPosts = allPosts.sort(
 
       <!-- 侧边栏 -->
       <aside data-cascade="2" class="post-sidebar">
-        <div class="sidebar-sticky-container">
+        <div class="sidebar-sticky-container space-y-8">
           <TableOfContents headings={headings} />
-          <div class="mt-6">
-            <RecentPostsSidebar posts={sortedPosts} currentPostId={post.id} />
-          </div>
+          <RecentPostsSidebar posts={sortedPosts} currentPostId={post.id} />
         </div>
       </aside>
     </div>
@@ -107,37 +93,40 @@ const sortedPosts = allPosts.sort(
 
 <style>
   .post-layout {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 2rem;
-  }
-
-  /* 桌面端：主内容 + 侧边栏 */
-  @media (min-width: 1024px) {
-    .post-layout {
-      grid-template-columns: minmax(0, 1fr) 20rem;
-      gap: 3rem;
-    }
-  }
-
-  @media (min-width: 1280px) {
-    .post-layout {
-      grid-template-columns: minmax(0, 1fr) 22rem;
-    }
+    position: relative;
   }
 
   .post-main {
-    min-width: 0;
+    width: 100%;
+  }
+  
+  /* 确保文章内容能占满容器宽度 */
+  .post-main article.prose {
+    max-width: none;
   }
 
   .post-sidebar {
     display: none;
   }
 
-  /* 桌面端显示侧边栏 */
-  @media (min-width: 1024px) {
+  /* 桌面端：侧边栏出现 */
+  @media (min-width: 1280px) {
+    .post-layout {
+      display: grid;
+      grid-template-columns: 1fr 15rem;
+      gap: 3rem;
+    }
+
     .post-sidebar {
       display: block;
+    }
+  }
+
+  /* 超大屏：侧边栏稍宽 */
+  @media (min-width: 1536px) {
+    .post-layout {
+      grid-template-columns: 1fr 16rem;
+      gap: 4rem;
     }
   }
 
