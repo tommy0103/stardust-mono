@@ -1,6 +1,7 @@
 ---
 import '../../styles/global.css';
 import Analytics from '@vercel/analytics/astro'
+import { ClientRouter } from 'astro:transitions';
 
 interface Props {
   title?: string;
@@ -27,11 +28,12 @@ const {
       href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600&family=Noto+Serif+SC:wght@500;600;700&display=swap"
       rel="stylesheet"
     />
+    <ClientRouter />
   </head>
   <body class="min-h-screen antialiased">
     <a href="#main" class="skip-link">跳到正文</a>
     <header class="glass-nav sticky top-0 z-40">
-      <div class="mx-auto flex max-w-3xl items-center justify-between gap-4 px-5 py-3 md:px-6">
+      <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3 md:px-6">
         <a
           href="/"
           class="font-serif text-lg font-semibold tracking-tight text-[var(--apoc-ink)] decoration-[var(--apoc-accent)] underline-offset-4 hover:underline"
@@ -48,3 +50,21 @@ const {
     <slot />
   </body>
 </html>
+
+<script>
+  function runCascade() {
+    document.querySelectorAll<HTMLElement>('[data-cascade]').forEach((el) => {
+      const idx = parseInt(el.dataset.cascade ?? '0');
+      el.style.animation = 'none';
+      el.style.opacity = '0';
+      void el.offsetHeight;
+      el.style.animation = '';
+      // 页面间导航快速淡入，初次加载时延迟更长以配合 Hero 动画
+      const isHeroPage = document.querySelector('[transition\\:name="page-hero"]') !== null;
+      const baseDelay = isHeroPage ? 380 : 150;
+      el.style.animationDelay = `${idx * 85 + baseDelay}ms`;
+    });
+  }
+
+  document.addEventListener('astro:page-load', runCascade);
+</script>

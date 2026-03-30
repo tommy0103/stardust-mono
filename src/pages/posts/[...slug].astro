@@ -1,6 +1,8 @@
 ---
 import { getCollection, render } from 'astro:content';
 import Layout from '../../core/layouts/Layout.astro';
+import TableOfContents from '../../core/components/TableOfContents.astro';
+import RecentPostsSidebar from '../../core/components/RecentPostsSidebar.astro';
 
 export async function getStaticPaths() {
   const posts = await getCollection('posts');
@@ -11,7 +13,7 @@ export async function getStaticPaths() {
 }
 
 const { post } = Astro.props;
-const { Content } = await render(post);
+const { Content, headings } = await render(post);
 
 const formattedDate = post.data.publishedAt.toLocaleString('zh-CN', {
   timeZone: 'Asia/Shanghai',
@@ -23,58 +25,253 @@ const formattedDate = post.data.publishedAt.toLocaleString('zh-CN', {
 });
 
 const desc = post.data.description ?? '';
+
+// 获取所有文章用于侧边栏
+const allPosts = await getCollection('posts');
+const sortedPosts = allPosts.sort(
+  (a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime()
+);
 ---
 
 <Layout title={`${post.data.title} — Mio's Notes`} description={desc}>
-  <main id="main" class="mx-auto max-w-3xl px-5 py-10 md:px-6 md:py-14">
+  <main id="main" class="mx-auto max-w-6xl px-5 py-10 md:px-6 md:py-14">
+    <!-- 面包屑导航 -->
     <nav
+      data-cascade="0"
       class="mb-8 rounded-xl border border-[var(--glass-border-soft)] bg-[var(--glass-fill)] px-4 py-3 text-sm text-[var(--apoc-muted)] backdrop-blur-md"
     >
       <a href="/" class="hover:text-[var(--apoc-accent)]">首页</a>
       <span class="mx-2 text-[var(--apoc-faint)]">/</span>
-      <a href="/#posts" class="hover:text-[var(--apoc-accent)]">归档</a>
+      <a href="/posts" class="hover:text-[var(--apoc-accent)]">归档</a>
       <span class="mx-2 text-[var(--apoc-faint)]">/</span>
       <span class="text-[var(--apoc-ink)]">正文</span>
     </nav>
 
-    <div class="glass-panel-strong px-6 py-10 md:px-10 md:py-12">
-      <header class="mb-10 border-b border-[var(--glass-border-soft)] pb-10">
-        <p class="mb-3 font-mono text-xs uppercase tracking-[0.2em] text-[var(--apoc-faint)]">
-          {formattedDate}
-        </p>
-        <h1
-          class="font-serif text-3xl font-bold leading-tight tracking-tight text-[var(--apoc-ink)] md:text-4xl"
-        >
-          {post.data.title}
-        </h1>
-        {desc && <p class="mt-5 text-lg leading-relaxed text-[var(--apoc-muted)]">{desc}</p>}
-        {post.data.tags && post.data.tags.length > 0 && (
-          <div class="mt-6 flex flex-wrap gap-2">
-            {post.data.tags.map((tag) => (
-              <span
-                class="rounded-full border border-[var(--glass-border-soft)] bg-[var(--apoc-accent-soft)] px-2.5 py-0.5 font-mono text-[0.65rem] uppercase tracking-wide text-[var(--apoc-muted)]"
-              >
-                {tag}
-              </span>
-            ))}
+    <!-- 双栏布局 -->
+    <div class="post-layout">
+      <!-- 主内容区 -->
+      <div class="post-main">
+        <div data-cascade="1" class="glass-panel-strong px-6 py-10 md:px-10 md:py-12">
+          <header class="mb-10 border-b border-[var(--glass-border-soft)] pb-10">
+            <p class="mb-3 font-mono text-xs uppercase tracking-[0.2em] text-[var(--apoc-faint)]">
+              {formattedDate}
+            </p>
+            <h1
+              class="font-serif text-3xl font-bold leading-tight tracking-tight text-[var(--apoc-ink)] md:text-4xl"
+            >
+              {post.data.title}
+            </h1>
+            {desc && <p class="mt-5 text-lg leading-relaxed text-[var(--apoc-muted)]">{desc}</p>}
+            {post.data.tags && post.data.tags.length > 0 && (
+              <div class="mt-6 flex flex-wrap gap-2">
+                {post.data.tags.map((tag: string) => (
+                  <span
+                    class="rounded-full border border-[var(--glass-border-soft)] bg-[var(--apoc-accent-soft)] px-2.5 py-0.5 font-mono text-[0.65rem] uppercase tracking-wide text-[var(--apoc-muted)]"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
+          </header>
+
+          <article
+            class="prose prose-lg prose-apocrypha text-[var(--apoc-ink)] prose-headings:font-serif"
+          >
+            <Content />
+          </article>
+        </div>
+
+        <footer data-cascade="3" class="mt-10 text-center text-sm text-[var(--apoc-muted)]">
+          <a
+            href="/posts"
+            class="btn-glass font-medium text-[var(--apoc-ink)] no-underline hover:text-[var(--apoc-accent)]"
+          >
+            ← 返回归档
+          </a>
+        </footer>
+      </div>
+
+      <!-- 侧边栏 -->
+      <aside data-cascade="2" class="post-sidebar">
+        <div class="sidebar-sticky-container">
+          <TableOfContents headings={headings} />
+          <div class="mt-6">
+            <RecentPostsSidebar posts={sortedPosts} currentPostId={post.id} />
           </div>
-        )}
-      </header>
-
-      <article
-        class="prose prose-lg prose-apocrypha max-w-none text-[var(--apoc-ink)] prose-headings:font-serif"
-      >
-        <Content />
-      </article>
+        </div>
+      </aside>
     </div>
-
-    <footer class="mt-10 text-center text-sm text-[var(--apoc-muted)]">
-      <a
-        href="/#posts"
-        class="btn-glass font-medium text-[var(--apoc-ink)] no-underline hover:text-[var(--apoc-accent)]"
-      >
-        ← 返回归档
-      </a>
-    </footer>
   </main>
 </Layout>
+
+<style>
+  .post-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  /* 桌面端：主内容 + 侧边栏 */
+  @media (min-width: 1024px) {
+    .post-layout {
+      grid-template-columns: minmax(0, 1fr) 20rem;
+      gap: 3rem;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .post-layout {
+      grid-template-columns: minmax(0, 1fr) 22rem;
+    }
+  }
+
+  .post-main {
+    min-width: 0;
+  }
+
+  .post-sidebar {
+    display: none;
+  }
+
+  /* 桌面端显示侧边栏 */
+  @media (min-width: 1024px) {
+    .post-sidebar {
+      display: block;
+    }
+  }
+
+  .sidebar-sticky-container {
+    position: sticky;
+    top: 5.5rem;
+    max-height: calc(100vh - 7rem);
+    overflow-y: auto;
+    /* 隐藏滚动条但保留功能 */
+    scrollbar-width: thin;
+    scrollbar-color: var(--glass-border-soft) transparent;
+  }
+
+  .sidebar-sticky-container::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .sidebar-sticky-container::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .sidebar-sticky-container::-webkit-scrollbar-thumb {
+    background: var(--glass-border-soft);
+    border-radius: 2px;
+  }
+</style>
+
+<script is:inline>
+  (function() {
+    function closeZoom(img) {
+      // 这个函数现在不再使用，保留以防万一
+    }
+    
+    function initImageZoom() {
+      // 选择所有文章内的图片
+      const images = document.querySelectorAll('article img');
+      
+      console.log('[Image Zoom] Found ' + images.length + ' images');
+      
+      images.forEach(function(img) {
+        img.style.cursor = 'zoom-in';
+        
+        img.addEventListener('click', function(e) {
+          e.stopPropagation();
+          console.log('[Image Zoom] Image clicked, src:', img.src);
+          
+          // 如果已经是放大状态，关闭
+          if (img.classList.contains('zoomed')) {
+            closeZoom(img);
+            return;
+          }
+          
+          // 创建背景遮罩
+          const backdrop = document.createElement('div');
+          backdrop.className = 'image-backdrop';
+          document.body.appendChild(backdrop);
+          
+          // 创建新图片元素
+          const clonedImg = document.createElement('img');
+          clonedImg.src = img.src;
+          clonedImg.alt = img.alt;
+          clonedImg.classList.add('zoomed');
+          
+          // 直接设置内联样式确保显示
+          clonedImg.style.cssText = `
+            position: fixed !important;
+            top: 50% !important;
+            left: 50% !important;
+            transform: translate(-50%, -50%) !important;
+            max-width: 90vw !important;
+            max-height: 90vh !important;
+            width: auto !important;
+            height: auto !important;
+            z-index: 10000 !important;
+            cursor: zoom-out !important;
+            object-fit: contain !important;
+            border-radius: 0.5rem;
+            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+          `;
+          
+          document.body.appendChild(clonedImg);
+          
+          // 确保图片加载并检查尺寸
+          clonedImg.onload = function() {
+            console.log('[Image Zoom] Image loaded:', {
+              width: clonedImg.offsetWidth,
+              height: clonedImg.offsetHeight,
+              naturalWidth: clonedImg.naturalWidth,
+              naturalHeight: clonedImg.naturalHeight,
+              zIndex: window.getComputedStyle(clonedImg).zIndex,
+              position: window.getComputedStyle(clonedImg).position
+            });
+          };
+          clonedImg.onerror = function() {
+            console.error('[Image Zoom] Failed to load image:', clonedImg.src);
+          };
+          
+          // 隐藏原图片
+          img.style.visibility = 'hidden';
+          
+          document.body.style.overflow = 'hidden';
+          console.log('[Image Zoom] Zoomed image added, src:', clonedImg.src);
+          
+          // 点击背景或图片关闭
+          function handleClose() {
+            clonedImg.remove();
+            backdrop.remove();
+            img.style.visibility = '';
+            document.body.style.overflow = '';
+            document.removeEventListener('keydown', handleEsc);
+          }
+          
+          backdrop.addEventListener('click', handleClose);
+          clonedImg.addEventListener('click', handleClose);
+          
+          // ESC 键关闭
+          function handleEsc(e) {
+            if (e.key === 'Escape') {
+              handleClose();
+            }
+          }
+          document.addEventListener('keydown', handleEsc);
+        });
+      });
+    }
+    
+    // 立即执行
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initImageZoom);
+    } else {
+      initImageZoom();
+    }
+    
+    // SPA 导航时重新初始化
+    document.addEventListener('astro:page-load', initImageZoom);
+  })();
+</script>

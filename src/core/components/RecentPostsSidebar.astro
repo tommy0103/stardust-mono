@@ -1,0 +1,105 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  posts: CollectionEntry<'posts'>[];
+  currentPostId: string;
+}
+
+const { posts, currentPostId } = Astro.props;
+
+// 过滤掉当前文章，取最新 5 篇
+const recentPosts = posts
+  .filter((p) => p.id !== currentPostId)
+  .slice(0, 5);
+
+function formatDate(date: Date): string {
+  return date.toLocaleDateString('zh-CN', {
+    month: 'short',
+    day: 'numeric',
+  });
+}
+---
+
+{recentPosts.length > 0 && (
+  <aside class="recent-posts">
+    <h2 class="sidebar-title">最近更新</h2>
+    <ul class="posts-list">
+      {recentPosts.map((post) => (
+        <li class="post-item">
+          <a href={`/posts/${post.id}`} class="post-link">
+            <span class="post-title">{post.data.title}</span>
+            <time class="post-date">{formatDate(post.data.publishedAt)}</time>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </aside>
+)}
+
+<style>
+  .recent-posts {
+    background: var(--glass-fill);
+    backdrop-filter: blur(18px) saturate(160%);
+    -webkit-backdrop-filter: blur(18px) saturate(160%);
+    border: 1px solid var(--glass-border-soft);
+    border-radius: 1rem;
+    padding: 1.25rem;
+    box-shadow: 0 4px 16px rgba(72, 95, 150, 0.06);
+  }
+
+  .sidebar-title {
+    font-family: "Noto Serif SC", serif;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--apoc-ink);
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .posts-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .post-item {
+    margin-bottom: 0.75rem;
+  }
+
+  .post-item:last-child {
+    margin-bottom: 0;
+  }
+
+  .post-link {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    transition: background 0.15s ease;
+  }
+
+  .post-link:hover {
+    background: rgba(77, 107, 232, 0.08);
+  }
+
+  .post-title {
+    font-size: 0.875rem;
+    line-height: 1.4;
+    color: var(--apoc-ink);
+    font-weight: 500;
+  }
+
+  .post-link:hover .post-title {
+    color: var(--apoc-accent);
+  }
+
+  .post-date {
+    font-size: 0.75rem;
+    color: var(--apoc-faint);
+    font-family: monospace;
+  }
+</style>
