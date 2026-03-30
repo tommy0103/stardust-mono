@@ -151,6 +151,8 @@ body {
   width: 1px;
   overflow: hidden;
   white-space: nowrap;
+  opacity: 0; /* 防止页面切换时闪现 */
+  transition: opacity 0.15s;
 }
 
 .skip-link:focus {
@@ -158,8 +160,22 @@ body {
   clip-path: none;
   height: auto;
   width: auto;
+  opacity: 1;
   outline: 2px solid var(--apoc-accent);
   outline-offset: 2px;
+}
+
+/* 页面加载进度条 */
+.page-loading-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--apoc-accent), rgba(88, 114, 245, 0.6));
+  z-index: 9999;
+  transition: width 0.3s ease, opacity 0.3s ease;
+  box-shadow: 0 0 10px rgba(88, 114, 245, 0.5);
+  opacity: 0;
 }
 
 ::selection {
