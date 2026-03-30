@@ -55,16 +55,17 @@ const {
   function runCascade() {
     document.querySelectorAll<HTMLElement>('[data-cascade]').forEach((el) => {
       const idx = parseInt(el.dataset.cascade ?? '0');
+      // 重置动画
       el.style.animation = 'none';
       el.style.opacity = '0';
-      void el.offsetHeight;
+      el.style.transform = 'translateY(16px)';
+      void el.offsetHeight; // 强制重排
       el.style.animation = '';
-      // 页面间导航快速淡入，初次加载时延迟更长以配合 Hero 动画
-      const isHeroPage = document.querySelector('[transition\\:name="page-hero"]') !== null;
-      const baseDelay = isHeroPage ? 380 : 150;
-      el.style.animationDelay = `${idx * 85 + baseDelay}ms`;
+      // 统一使用 150ms 基础延迟
+      el.style.animationDelay = `${idx * 85 + 150}ms`;
     });
   }
 
+  // 页面加载后运行级联动画
   document.addEventListener('astro:page-load', runCascade);
 </script>

@@ -220,6 +220,9 @@ body {
 }
 
 [data-cascade] {
+  /* 初始隐藏，防止未样式化内容闪现 */
+  opacity: 0;
+  transform: translateY(16px);
   animation: cascade-in 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
   /* 默认延迟由 JS 根据索引覆盖 */
   animation-delay: 150ms;
