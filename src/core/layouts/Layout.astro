@@ -53,15 +53,23 @@ const {
 
 <script>
   function runCascade() {
+    // 重置导航栏动画
+    const header = document.querySelector<HTMLElement>('.glass-nav');
+    if (header) {
+      header.style.animation = 'none';
+      header.style.opacity = '0';
+      void header.offsetHeight;
+      header.style.animation = '';
+    }
+    
+    // 重置内容级联动画
     document.querySelectorAll<HTMLElement>('[data-cascade]').forEach((el) => {
       const idx = parseInt(el.dataset.cascade ?? '0');
-      // 重置动画
       el.style.animation = 'none';
       el.style.opacity = '0';
       el.style.transform = 'translateY(16px)';
-      void el.offsetHeight; // 强制重排
+      void el.offsetHeight;
       el.style.animation = '';
-      // 统一使用 150ms 基础延迟
       el.style.animationDelay = `${idx * 85 + 150}ms`;
     });
   }
