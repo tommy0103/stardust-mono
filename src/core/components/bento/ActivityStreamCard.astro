@@ -1,0 +1,47 @@
+---
+const placeholderActivities = [
+  { type: 'post', text: '发布了新文章', time: '2 小时前' },
+  { type: 'reading', text: '添加了一篇阅读', time: '5 小时前' },
+  { type: 'commit', text: '提交了代码更新', time: '1 天前' },
+  { type: 'note', text: '更新了笔记', time: '2 天前' },
+];
+
+const typeIcons: Record<string, string> = {
+  post: '📝',
+  reading: '📚',
+  commit: '💻',
+  note: '📒',
+};
+---
+
+<article class="bento-card bento-card-tall">
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="font-serif text-lg font-semibold text-[var(--apoc-ink)]">动态</h2>
+    <span class="text-xs text-[var(--apoc-faint)] italic">Coming soon</span>
+  </div>
+  
+  <div class="relative">
+    <div class="absolute left-3 top-0 bottom-0 w-px bg-[var(--glass-border-soft)]"></div>
+    
+    <div class="flex flex-col gap-4">
+      {placeholderActivities.map((activity) => (
+        <div class="relative flex items-start gap-3 pl-6">
+          <div class="absolute left-1.5 top-1 h-3 w-3 rounded-full border-2 border-[var(--apoc-accent-soft)] bg-white"></div>
+          <div class="flex-1">
+            <div class="flex items-center gap-2">
+              <span class="text-sm">{typeIcons[activity.type]}</span>
+              <span class="text-sm text-[var(--apoc-muted)]">{activity.text}</span>
+            </div>
+            <time class="text-xs text-[var(--apoc-faint)]">{activity.time}</time>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+  
+  <div class="mt-4 pt-4 border-t border-[var(--glass-border-soft)]">
+    <p class="text-xs text-[var(--apoc-faint)] text-center italic">
+      Activity stream 即将上线...
+    </p>
+  </div>
+</article>

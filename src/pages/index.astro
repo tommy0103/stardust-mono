@@ -1,12 +1,23 @@
 ---
 import Layout from '../core/layouts/Layout.astro';
-import PostCard from '../core/components/PostCard.astro';
+import LatestPostsCard from '../core/components/bento/LatestPostsCard.astro';
+import LatestReadingsCard from '../core/components/bento/LatestReadingsCard.astro';
+import ActivityStreamCard from '../core/components/bento/ActivityStreamCard.astro';
+import CommitGraphCard from '../core/components/bento/CommitGraphCard.astro';
 import { getCollection } from 'astro:content';
+import { mockReadings } from '../data/readings';
+import { fetchGitHubContributions } from '../data/github';
 
 const allPosts = await getCollection('posts');
 const sortedPosts = allPosts.sort(
   (a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime(),
 );
+
+const sortedReadings = [...mockReadings].sort(
+  (a, b) => b.addedAt.getTime() - a.addedAt.getTime()
+);
+
+const githubData = await fetchGitHubContributions();
 ---
 
 <Layout
@@ -14,61 +25,138 @@ const sortedPosts = allPosts.sort(
   description="亮色液态玻璃风格的笔记归档：Markdown 与 LaTeX 可读排版。"
 >
   <main id="main" class="relative">
-    <section class="mx-auto max-w-3xl px-5 pb-6 pt-12 md:px-6 md:pb-10 md:pt-16">
-      <div class="glass-panel-strong px-6 py-12 md:px-10 md:py-16">
+    <!-- Hero Section -->
+    <section class="mx-auto max-w-5xl px-5 pb-6 pt-12 md:px-6 md:pb-10 md:pt-16">
+      <div class="glass-panel-strong px-6 py-10 md:px-10 md:py-14">
         <p
-          class="mb-4 font-mono text-xs uppercase tracking-[0.22em] text-[var(--apoc-faint)]"
+          class="mb-3 font-mono text-xs uppercase tracking-[0.22em] text-[var(--apoc-faint)]"
         >
           Digital garden
         </p>
         <h1
-          class="font-serif text-4xl font-bold leading-[1.12] tracking-tight text-[var(--apoc-ink)] md:text-5xl"
+          class="font-serif text-3xl font-bold leading-[1.12] tracking-tight text-[var(--apoc-ink)] md:text-4xl"
         >
-          <!-- 深夜笔记与公式归档 -->
           Eureka & Entropy-
         </h1>
         <p
-          class="mt-6 max-w-2xl text-lg leading-relaxed text-[var(--apoc-muted)] md:text-xl"
+          class="mt-4 max-w-2xl text-base leading-relaxed text-[var(--apoc-muted)] md:text-lg"
         >
-          <!-- 本不该交会的主题在此折射、归档……亮色液态玻璃界面下，长文与公式仍然优先可读。 -->
-		  Life is too short to be ordinary——<br><span class="italic">"Wir müssen wissen. Wir werden wissen."</span>
+          Life is too short to be ordinary——<span class="italic">"Wir müssen wissen. Wir werden wissen."</span>
         </p>
-        <div class="mt-10 flex flex-wrap items-center gap-4">
-          <a href="#posts" class="btn-glass-primary">开始阅读</a>
-          {sortedPosts[0] && (
-            <a
-              href={`/posts/${sortedPosts[0].id}`}
-              class="btn-glass text-[var(--apoc-muted)] hover:text-[var(--apoc-ink)]"
-            >
-              最新：{sortedPosts[0].data.title}
-            </a>
-          )}
-        </div>
       </div>
     </section>
 
-    <section id="posts" class="mx-auto max-w-3xl scroll-mt-28 px-5 py-10 md:px-6 md:py-16">
-      <div
-        class="mb-10 flex items-end justify-between gap-4 rounded-2xl border border-[var(--glass-border-soft)] bg-[var(--glass-fill)] px-5 py-4 backdrop-blur-md md:px-6"
-      >
-        <div>
-          <h2 class="font-serif text-2xl font-bold text-[var(--apoc-ink)]">笔记归档</h2>
-          <p class="mt-1 text-sm text-[var(--apoc-muted)]">按发布时间倒序</p>
+    <!-- Bento Grid -->
+    <section class="mx-auto max-w-5xl px-5 pb-16 md:px-6">
+      <div class="bento-grid">
+        <!-- Row 1: Latest Posts (large) + Activity Stream (tall, spans 2 rows) -->
+        <div class="bento-area-posts">
+          <LatestPostsCard posts={sortedPosts} />
         </div>
-        <span class="font-mono text-xs text-[var(--apoc-faint)]">{sortedPosts.length} 篇</span>
+        
+        <div class="bento-area-activity">
+          <ActivityStreamCard />
+        </div>
+        
+        <!-- Row 2: Readings + Commit Graph -->
+        <div class="bento-area-readings">
+          <LatestReadingsCard readings={sortedReadings} />
+        </div>
+        
+        <div class="bento-area-commits">
+          <CommitGraphCard data={githubData} />
+        </div>
       </div>
-
-      <div class="flex flex-col gap-7">
-        {sortedPosts.map((post) => (
-          <PostCard post={post} />
-        ))}
-      </div>
-
-      <footer
-        class="mt-16 rounded-2xl border border-[var(--glass-border-soft)] bg-[var(--glass-fill)] px-4 py-8 text-center text-sm text-[var(--apoc-muted)] backdrop-blur-md"
-      >
-        <p>Astro + Tailwind Typography + MathJax</p>
-      </footer>
     </section>
   </main>
 </Layout>
+
+<style>
+  .bento-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  @media (min-width: 768px) {
+    .bento-grid {
+      grid-template-columns: 1.2fr 0.8fr;
+      grid-template-rows: auto auto;
+      gap: 1.25rem;
+    }
+    
+    .bento-area-posts {
+      grid-column: 1;
+      grid-row: 1;
+    }
+    
+    .bento-area-activity {
+      grid-column: 2;
+      grid-row: 1 / 3;
+    }
+    
+    .bento-area-readings {
+      grid-column: 1;
+      grid-row: 2;
+    }
+    
+    .bento-area-commits {
+      display: none;
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .bento-grid {
+      grid-template-columns: 1fr 1fr 0.8fr;
+      grid-template-rows: auto auto;
+    }
+    
+    .bento-area-posts {
+      grid-column: 1 / 3;
+      grid-row: 1;
+    }
+    
+    .bento-area-activity {
+      grid-column: 3;
+      grid-row: 1 / 3;
+    }
+    
+    .bento-area-readings {
+      grid-column: 1;
+      grid-row: 2;
+    }
+    
+    .bento-area-commits {
+      display: block;
+      grid-column: 2;
+      grid-row: 2;
+    }
+  }
+</style>
+
+<style is:global>
+  .bento-card {
+    background: var(--glass-fill);
+    backdrop-filter: blur(18px) saturate(160%);
+    -webkit-backdrop-filter: blur(18px) saturate(160%);
+    border: 1px solid var(--glass-border-soft);
+    border-radius: 1.25rem;
+    padding: 1.25rem;
+    box-shadow: 0 4px 16px rgba(72, 95, 150, 0.06);
+    height: 100%;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .bento-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(72, 95, 150, 0.1);
+  }
+  
+  .bento-card-large {
+    min-height: 280px;
+  }
+  
+  .bento-card-tall {
+    min-height: 100%;
+  }
+</style>

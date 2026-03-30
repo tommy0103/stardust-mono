@@ -58,4 +58,4 @@ export const mockReadings: ReadingItem[] = [
         status: 'pending'
     }
     // ... 添加更多阅读记录
-  ];
+];
