@@ -9,6 +9,7 @@
   --apoc-accent: #9999ff;
   --apoc-accent-rgb: 153, 153, 255;
   --apoc-accent-alt: #a8a8ff;
+  --apoc-accent-alt-rgb: 168, 168, 255;
   --apoc-accent-soft: rgba(var(--apoc-accent-rgb), 0.14);
 
   --glass-fill: rgba(255, 255, 255, 0.38);
