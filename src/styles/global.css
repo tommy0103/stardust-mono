@@ -6,9 +6,10 @@
   --apoc-ink: #1a1f2e;
   --apoc-muted: #5a6578;
   --apoc-faint: #8b96aa;
-  --apoc-accent: #4d6be8;
-  --apoc-accent-alt: #6366f1;
-  --apoc-accent-soft: rgba(77, 107, 232, 0.14);
+  --apoc-accent: #9999ff;
+  --apoc-accent-rgb: 153, 153, 255;
+  --apoc-accent-alt: #a8a8ff;
+  --apoc-accent-soft: rgba(var(--apoc-accent-rgb), 0.14);
 
   --glass-fill: rgba(255, 255, 255, 0.38);
   --glass-fill-strong: rgba(255, 255, 255, 0.58);
@@ -112,11 +113,11 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.38);
   background: linear-gradient(
     135deg,
-    rgba(88, 114, 245, 0.92),
-    rgba(121, 111, 255, 0.88)
+    rgba(var(--apoc-accent-rgb), 0.92),
+    rgba(var(--apoc-accent-alt-rgb), 0.88)
   );
   box-shadow:
-    0 8px 28px rgba(88, 114, 245, 0.35),
+    0 8px 28px rgba(var(--apoc-accent-rgb), 0.35),
     inset 0 1px 0 rgba(255, 255, 255, 0.35);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -128,7 +129,7 @@ body {
 
 .btn-glass-primary:hover {
   filter: brightness(1.05);
-  box-shadow: 0 12px 36px rgba(88, 114, 245, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  box-shadow: 0 12px 36px rgba(var(--apoc-accent-rgb), 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.45);
   transform: translateY(-1px);
 }
 
@@ -171,15 +172,15 @@ body {
   top: 0;
   left: 0;
   height: 3px;
-  background: linear-gradient(90deg, var(--apoc-accent), rgba(88, 114, 245, 0.6));
+  background: linear-gradient(90deg, var(--apoc-accent), rgba(var(--apoc-accent-rgb), 0.6));
   z-index: 9999;
   transition: width 0.3s ease, opacity 0.3s ease;
-  box-shadow: 0 0 10px rgba(88, 114, 245, 0.5);
+  box-shadow: 0 0 10px rgba(var(--apoc-accent-rgb), 0.5);
   opacity: 0;
 }
 
 ::selection {
-  background: rgba(99, 102, 241, 0.22);
+  background: rgba(var(--apoc-accent-rgb), 0.22);
   color: var(--apoc-ink);
 }
 
@@ -303,10 +304,10 @@ body {
 
 .prose-apocrypha code {
   font-size: 0.9em;
-  background: rgba(77, 107, 232, 0.08);
+  background: rgba(var(--apoc-accent-rgb), 0.08);
   padding: 0.12em 0.35em;
   border-radius: 6px;
-  border: 1px solid rgba(77, 107, 232, 0.12);
+  border: 1px solid rgba(var(--apoc-accent-rgb), 0.12);
 }
 
 .prose-apocrypha pre {

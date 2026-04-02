@@ -3,7 +3,7 @@ import Layout from '../core/layouts/Layout.astro';
 import LatestPostsCard from '../core/components/bento/LatestPostsCard.astro';
 import LatestReadingsCard from '../core/components/bento/LatestReadingsCard.astro';
 import ActivityStreamCard from '../core/components/bento/ActivityStreamCard.astro';
-import CommitGraphCard from '../core/components/bento/CommitGraphCard.astro';
+import CommitGraph from '../core/components/vue/CommitGraph.vue';
 import { getCollection } from 'astro:content';
 import { mockReadings } from '../data/readings';
 import { fetchGitHubContributions } from '../data/github';
@@ -64,7 +64,7 @@ const githubData = await fetchGitHubContributions();
         </div>
         
         <div class="bento-area-commits">
-          <CommitGraphCard data={githubData} />
+          <CommitGraph data={githubData} client:visible />
         </div>
       </div>
     </section>

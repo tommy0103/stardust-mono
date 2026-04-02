@@ -8,6 +8,7 @@ import remarkBlockquoteBreaks from './src/remark/remark-blockquote-breaks.mjs';
 
 import vercel from '@astrojs/vercel';
 import mdx from '@astrojs/mdx';
+import vue from '@astrojs/vue';
 
 // https://astro.build/config
 export default defineConfig({
@@ -23,6 +24,6 @@ export default defineConfig({
     /* remark-math 需先于其它会改写文本的插件 */
     remarkPlugins: [remarkMath, remarkBlockquoteBreaks],
   },
-  integrations: [mdx()],
+  integrations: [mdx(), vue()],
   adapter: vercel()
 });

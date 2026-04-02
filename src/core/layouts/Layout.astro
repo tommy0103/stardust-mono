@@ -2,6 +2,7 @@
 import '../../styles/global.css';
 import Analytics from '@vercel/analytics/astro'
 import { ClientRouter } from 'astro:transitions';
+import PageLoadingBar from '../components/vue/PageLoadingBar.vue';
 
 interface Props {
   title?: string;
@@ -31,6 +32,7 @@ const {
     <ClientRouter />
   </head>
   <body class="min-h-screen antialiased">
+    <PageLoadingBar client:load />
     <header class="glass-nav sticky top-0 z-40">
       <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3 md:px-6">
         <a
@@ -49,75 +51,3 @@ const {
     <slot />
   </body>
 </html>
-
-<script>
-  // 页面加载进度条
-  let loadingBar: HTMLDivElement | null = null;
-  
-  function showLoadingBar() {
-    if (!loadingBar) {
-      loadingBar = document.createElement('div');
-      loadingBar.className = 'page-loading-bar';
-      document.body.appendChild(loadingBar);
-    }
-    loadingBar.style.width = '0%';
-    loadingBar.style.opacity = '1';
-    
-    // 模拟进度
-    let progress = 0;
-    const interval = setInterval(() => {
-      progress += Math.random() * 30;
-      if (progress > 90) progress = 90;
-      if (loadingBar) loadingBar.style.width = progress + '%';
-    }, 100);
-    
-    return () => {
-      clearInterval(interval);
-      if (loadingBar) {
-        loadingBar.style.width = '100%';
-        setTimeout(() => {
-          if (loadingBar) {
-            loadingBar.style.opacity = '0';
-          }
-        }, 200);
-      }
-    };
-  }
-  
-  function runCascade() {
-    // 重置导航栏动画
-    const header = document.querySelector<HTMLElement>('.glass-nav');
-    if (header) {
-      header.style.animation = 'none';
-      header.style.opacity = '0';
-      void header.offsetHeight;
-      header.style.animation = '';
-    }
-    
-    // 重置内容级联动画
-    document.querySelectorAll<HTMLElement>('[data-cascade]').forEach((el) => {
-      const idx = parseInt(el.dataset.cascade ?? '0');
-      el.style.animation = 'none';
-      el.style.opacity = '0';
-      el.style.transform = 'translateY(16px)';
-      void el.offsetHeight;
-      el.style.animation = '';
-      el.style.animationDelay = `${idx * 85 + 150}ms`;
-    });
-  }
-
-  // 页面导航开始时显示进度条
-  let stopLoading: (() => void) | null = null;
-  document.addEventListener('astro:before-preparation', () => {
-    stopLoading = showLoadingBar();
-  });
-  
-  // 页面加载完成后隐藏进度条并运行动画
-  document.addEventListener('astro:page-load', () => {
-    if (stopLoading) {
-      stopLoading();
-      stopLoading = null;
-    }
-    runCascade();
-  });
-</script>

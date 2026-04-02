@@ -1,8 +1,9 @@
 ---
 import { getCollection, render } from 'astro:content';
 import Layout from '../../core/layouts/Layout.astro';
-import TableOfContents from '../../core/components/TableOfContents.astro';
+import TableOfContents from '../../core/components/vue/TableOfContents.vue';
 import RecentPostsSidebar from '../../core/components/RecentPostsSidebar.astro';
+import ImageZoom from '../../core/components/vue/ImageZoom.vue';
 
 export async function getStaticPaths() {
   const posts = await getCollection('posts');
@@ -83,11 +84,14 @@ const sortedPosts = allPosts.sort(
       <!-- 侧边栏 -->
       <aside data-cascade="2" class="post-sidebar">
         <div class="sidebar-sticky-container space-y-8">
-          <TableOfContents headings={headings} />
+          <TableOfContents headings={headings} client:load />
           <RecentPostsSidebar posts={sortedPosts} currentPostId={post.id} />
         </div>
       </aside>
     </div>
+    
+    <!-- 图片缩放组件 -->
+    <ImageZoom client:load />
   </main>
 </Layout>
 
@@ -153,114 +157,3 @@ const sortedPosts = allPosts.sort(
     border-radius: 2px;
   }
 </style>
-
-<script is:inline>
-  (function() {
-    function closeZoom(img) {
-      // 这个函数现在不再使用，保留以防万一
-    }
-    
-    function initImageZoom() {
-      // 选择所有文章内的图片
-      const images = document.querySelectorAll('article img');
-      
-      console.log('[Image Zoom] Found ' + images.length + ' images');
-      
-      images.forEach(function(img) {
-        img.style.cursor = 'zoom-in';
-        
-        img.addEventListener('click', function(e) {
-          e.stopPropagation();
-          console.log('[Image Zoom] Image clicked, src:', img.src);
-          
-          // 如果已经是放大状态，关闭
-          if (img.classList.contains('zoomed')) {
-            closeZoom(img);
-            return;
-          }
-          
-          // 创建背景遮罩
-          const backdrop = document.createElement('div');
-          backdrop.className = 'image-backdrop';
-          document.body.appendChild(backdrop);
-          
-          // 创建新图片元素
-          const clonedImg = document.createElement('img');
-          clonedImg.src = img.src;
-          clonedImg.alt = img.alt;
-          clonedImg.classList.add('zoomed');
-          
-          // 直接设置内联样式确保显示
-          clonedImg.style.cssText = `
-            position: fixed !important;
-            top: 50% !important;
-            left: 50% !important;
-            transform: translate(-50%, -50%) !important;
-            max-width: 90vw !important;
-            max-height: 90vh !important;
-            width: auto !important;
-            height: auto !important;
-            z-index: 10000 !important;
-            cursor: zoom-out !important;
-            object-fit: contain !important;
-            border-radius: 0.5rem;
-            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
-          `;
-          
-          document.body.appendChild(clonedImg);
-          
-          // 确保图片加载并检查尺寸
-          clonedImg.onload = function() {
-            console.log('[Image Zoom] Image loaded:', {
-              width: clonedImg.offsetWidth,
-              height: clonedImg.offsetHeight,
-              naturalWidth: clonedImg.naturalWidth,
-              naturalHeight: clonedImg.naturalHeight,
-              zIndex: window.getComputedStyle(clonedImg).zIndex,
-              position: window.getComputedStyle(clonedImg).position
-            });
-          };
-          clonedImg.onerror = function() {
-            console.error('[Image Zoom] Failed to load image:', clonedImg.src);
-          };
-          
-          // 隐藏原图片
-          img.style.visibility = 'hidden';
-          
-          document.body.style.overflow = 'hidden';
-          console.log('[Image Zoom] Zoomed image added, src:', clonedImg.src);
-          
-          // 点击背景或图片关闭
-          function handleClose() {
-            clonedImg.remove();
-            backdrop.remove();
-            img.style.visibility = '';
-            document.body.style.overflow = '';
-            document.removeEventListener('keydown', handleEsc);
-          }
-          
-          backdrop.addEventListener('click', handleClose);
-          clonedImg.addEventListener('click', handleClose);
-          
-          // ESC 键关闭
-          function handleEsc(e) {
-            if (e.key === 'Escape') {
-              handleClose();
-            }
-          }
-          document.addEventListener('keydown', handleEsc);
-        });
-      });
-    }
-    
-    // 立即执行
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initImageZoom);
-    } else {
-      initImageZoom();
-    }
-    
-    // SPA 导航时重新初始化
-    document.addEventListener('astro:page-load', initImageZoom);
-  })();
-</script>
